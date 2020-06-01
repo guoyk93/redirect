@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -50,12 +51,14 @@ func main() {
 
 	// redirect
 	http.HandleFunc("/", func(rw http.ResponseWriter, req *http.Request) {
-		// make a clone of req.URL and clear host and scheme
-		url := *req.URL
-		url.Host = ""
-		url.Scheme = ""
-
-		http.Redirect(rw, req, optTarget+url.String(), http.StatusTemporaryRedirect)
+		if strings.HasSuffix(optTarget, "/") {
+			url := *req.URL
+			url.Host = ""
+			url.Scheme = ""
+			http.Redirect(rw, req, optTarget+strings.TrimPrefix(url.String(), "/"), http.StatusTemporaryRedirect)
+		} else {
+			http.Redirect(rw, req, optTarget, http.StatusTemporaryRedirect)
+		}
 	})
 
 	chErr := make(chan error, 1)

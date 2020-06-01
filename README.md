@@ -13,6 +13,10 @@ A simple HTTP service doest nothing but redirect
 * `PORT` port to listen, default to `80`
 * `TARGET` target location, for example `https://example.com` or `https://example.com/subpath`
 
+## Path Combination
+
+If `TARGET` has `/` suffixed, original path will be appended to `TARGET`
+
 ## Health Check
 
 ```text
